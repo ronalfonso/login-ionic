@@ -1,14 +1,39 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
+  <ion-toolbar>
+    <ion-title>Administrador</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <form [formGroup]="form">
+      <div class="main-bar">
+        <div class="second-bar">
+          <ion-input formControlName="email" placeholder="Email for query"></ion-input>
+          <ion-label>Current</ion-label>
+          <ion-toggle formControlName="current"></ion-toggle>
+        </div>
+        <button ion-button round small (click)="search()">Buscar</button>
+      </div>
+    </form>
+  </ion-toolbar>
 </ion-header>
-
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <ion-list>
+    <ion-searchbar [(ngModel)]="searchTerm" [placeholder]="'Filtrar por ID'" (ionInput)="setFilteredItems()"></ion-searchbar>
+    <div *ngIf="bookings.length > 0  || firstSearch; else noResults">
+    <ion-item text-wrap class="booking-item" *ngFor="let booking of bookings">
+      <p>BookingId: {{booking.bookingId}}</p>
+      <p>Cliente: {{booking.tutenUserClient.firstName}} {{booking.tutenUserClient.lastName}}</p>
+      <p>Fecha de Creacion</p>
+      <p>{{booking.bookingTime | date: 'dd-MM-yyyy'}}</p>
+      <p>Direccion</p>
+      <p>{{ booking.locationId.streetAddress }}</p>
+      <p>Precio {{booking.bookingPrice}}</p>
+    </ion-item>
+    </div>
+  </ion-list>
 </ion-content>
+
+<ng-template #noResults>
+  <ion-item>
+    No se encontraron registros asociados a ese correo.
+  </ion-item>
+</ng-template>
